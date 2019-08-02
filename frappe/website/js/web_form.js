@@ -126,7 +126,12 @@ frappe.ready(function() {
 						show_success_message();
 					}
 
-					if(frappe.is_new && frappe.login_required) {
+					if(frappe.login_required) {
+						show_success_message();
+					}
+
+					// if(frappe.is_new && frappe.login_required) {
+					if(false) {
 						// reload page (with ID)
 						window.location.href = window.location.pathname + "?name=" + frappe.doc_name;
 					}

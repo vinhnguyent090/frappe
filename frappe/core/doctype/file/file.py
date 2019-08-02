@@ -213,6 +213,7 @@ class File(NestedSet):
 			path = os.path.abspath(frappe.get_site_path("public", thumbnail_url.lstrip("/")))
 
 			try:
+				image = image.convert('RGB')
 				image.save(path)
 
 				if set_as_thumbnail:

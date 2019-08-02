@@ -40,9 +40,36 @@
 				<a href="/me">{{ _("My Account") }}</a>
 			</li>
 			{% endif %}
+			
+			<!-- Custom added My Wallet Balance Field as on 21-06-19-->
+			<li style="cursor:pointer;font-size:14px"  onclick="myFunction()">My Wallet</li>
+			<span style="display:none;background-color: aliceblue;padding: 2px 10px 2px 2px;font-weight: 700;" id="wallet"></span>
 		</ul>
 	</div>
 </div>
+
+<!--Custom added script as on 21-06-19-->
+<script>
+  frappe.ready(function() {
+	  frappe.call({
+          method: "bellamar_website.utils.utils.fetch_wallet",
+          args: {customer:"Nikhil Rana"},
+          callback: function(r) {
+		  if(r.message ===undefined)
+		  {
+		  	document.getElementById("wallet").innerHTML = 0;
+		  }
+		  else{
+                	document.getElementById("wallet").innerHTML = r.message;
+		  }
+	  }
+          });
+   });
+  function myFunction() {
+  	$("#wallet").show();
+  }
+</script>
+<!--End of custom script-->
 
 <script>
 frappe.ready(function() {

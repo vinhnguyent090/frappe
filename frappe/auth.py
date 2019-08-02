@@ -101,6 +101,20 @@ class LoginManager:
 		self.full_name = None
 		self.user_type = None
 
+		#customization as on 06-06-19
+		self.email = None
+		self.user_type = None
+		self.name = None
+		self.device_id = None
+
+		self.first_name = None
+		self.last_name = None
+		self.mobile_no = None
+		self.user_image = None
+		self.primary_city = None
+		self.business_type = None
+		#end of customization
+
 		if frappe.local.form_dict.get('cmd')=='login' or frappe.local.request.path=="/api/method/login":
 			if self.login()==False: return
 			self.resume = False
@@ -137,10 +151,11 @@ class LoginManager:
 		self.get_user_info()
 		self.make_session()
 		self.set_user_info()
-
+        
+        #add "email","user_type","name", "device_id" in Line No. 151 as on 06-06-19
 	def get_user_info(self, resume=False):
 		self.info = frappe.db.get_value("User", self.user,
-			["user_type", "first_name", "last_name", "user_image"], as_dict=1)
+			["user_type", "first_name", "last_name", "user_image","email","user_type","name", "device_id","mobile_no","primary_city","business_type"], as_dict=1)
 
 		self.user_type = self.info.user_type
 
@@ -154,7 +169,7 @@ class LoginManager:
 		if self.info.user_type=="Website User":
 			frappe.local.cookie_manager.set_cookie("system_user", "no")
 			if not resume:
-				frappe.local.response["message"] = "No App"
+				frappe.local.response["message"] = "You are login Successfully"
 				frappe.local.response["home_page"] = get_website_user_home_page(self.user)
 		else:
 			frappe.local.cookie_manager.set_cookie("system_user", "yes")
@@ -163,7 +178,36 @@ class LoginManager:
 				frappe.local.response["home_page"] = "/desk"
 
 		if not resume:
+			#code for set device id as on 06-06-19
+			# user = frappe.form_dict.get('device_id')
+			# doc = frappe.get_doc("User", self.info.name)
+			# doc.device_id = frappe.form_dict.get('device_id')
+			# doc.save(ignore_permissions=True)
+			frappe.db.sql(""" update `tabUser` set device_id = %s where name = %s""", (frappe.form_dict.get('device'), self.info.name))
+			#end of code
+                        
 			frappe.response["full_name"] = self.full_name
+			#add code as on 06-06-19 for showing more details in JSON response
+			frappe.response["first_name"] = self.info.first_name
+			frappe.response["last_name"] = self.info.last_name
+			frappe.response["mobile_no"] = self.info.mobile_no
+			frappe.response["user_image"] = self.info.user_image
+			frappe.response["primary_city"] = self.info.primary_city
+			frappe.response["business_type"] = self.info.business_type
+
+
+			frappe.response["user_email"] = self.info.name
+			frappe.response["user_role"] = self.info.user_type
+			
+
+			#get userid
+			if self.info.user_type=="Website User":
+				user_id = frappe.db.get_values("User Social Login",filters={'parent':self.info.name},fieldname=['userid'])
+				user_id = [element for tupl in user_id for element in tupl]
+				user_id = [str(item) for item in user_id]
+				user_id = user_id[0]
+				frappe.response["userid"] = user_id
+			#end of code
 
 		# redirect information
 		redirect_to = frappe.cache().hget('redirect_after_login', self.user)
@@ -346,7 +390,39 @@ class CookieManager:
 
 @frappe.whitelist()
 def get_logged_user():
+	#customization as on 06-06-19
+	doc = frappe.get_doc("User", frappe.session.user)
+	#add code as on 06-06-19 for showing more details in JSON response
+	frappe.response["first_name"] = doc.first_name
+	frappe.response["last_name"] = doc.last_name
+	frappe.response["mobile_no"] = doc.mobile_no
+	frappe.response["user_image"] = doc.user_image
+	frappe.response["primary_city"] = doc.primary_city
+	frappe.response["business_type"] = doc.business_type
+	frappe.response["user_email"] = doc.name
+	#get userid
+	if doc.user_type=="Website User":
+		user_id = frappe.db.get_values("User Social Login",filters={'parent':doc.name},fieldname=['userid'])
+		user_id = [element for tupl in user_id for element in tupl]
+		user_id = [str(item) for item in user_id]
+		user_id = user_id[0]
+		frappe.response["userid"] = user_id
+	# end of customization
 	return frappe.session.user
+
+#custom method for updateding user profile
+@frappe.whitelist()
+def update_logged_user(f_name, l_name, img, mobile, primary_city, b_type):
+    doc = frappe.get_doc("User", frappe.session.user)
+    doc.first_name = f_name
+    doc.last_name = l_name
+    doc.user_image = img
+    doc.mobile_no = mobile
+    doc.primary_city = primary_city
+    doc.business_type = b_type
+    doc.save(ignore_permissions=True)
+    frappe.response["message"] = "Profile Updated Sucessfully"
+    #return "Done"
 
 def clear_cookies():
 	if hasattr(frappe.local, "session"):
@@ -357,7 +433,7 @@ def get_website_user_home_page(user):
 	home_page_method = frappe.get_hooks('get_website_user_home_page')
 	if home_page_method:
 		home_page = frappe.get_attr(home_page_method[-1])(user)
-		return '/' + home_page.strip('/')
+		return  '/' + home_page.strip('/')
 	elif frappe.get_hooks('website_user_home_page'):
 		return '/' + frappe.get_hooks('website_user_home_page')[-1].strip('/')
 	else:
