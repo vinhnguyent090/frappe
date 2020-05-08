@@ -167,15 +167,15 @@ class LoginManager:
 			if not resume:
 				frappe.local.response['message'] = 'Logged In'
 				# frappe.local.response["home_page"] = "/desk"
-				home_page = "desk" 
+				home_page_login = "desk" 
 				if self.user !="Administrator": 
-					role_home_page = frappe.get_hooks("role_home_page") 
-					if role_home_page: 
+					role_home_page_login = frappe.get_hooks("role_home_page_login") 
+					if role_home_page_login: 
 						for role in frappe.get_roles(): 
-							if role in role_home_page: 
-								home_page = role_home_page[role][-1] 
+							if role in role_home_page_login: 
+								home_page_login = role_home_page_login[role][-1] 
 								break 
-				frappe.local.response["home_page"] =  '/' + home_page
+				frappe.local.response["home_page"] =  '/' + home_page_login
 
 		if not resume:
 			frappe.response["full_name"] = self.full_name
