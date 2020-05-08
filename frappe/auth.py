@@ -166,7 +166,16 @@ class LoginManager:
 			frappe.local.cookie_manager.set_cookie("system_user", "yes")
 			if not resume:
 				frappe.local.response['message'] = 'Logged In'
-				frappe.local.response["home_page"] = "/desk"
+				# frappe.local.response["home_page"] = "/desk"
+				home_page = "desk" 
+				if self.user !="Administrator": 
+					role_home_page = frappe.get_hooks("role_home_page") 
+					if role_home_page: 
+						for role in frappe.get_roles(): 
+							if role in role_home_page: 
+								home_page = role_home_page[role][-1] 
+								break 
+				frappe.local.response["home_page"] =  '/' + home_page
 
 		if not resume:
 			frappe.response["full_name"] = self.full_name
