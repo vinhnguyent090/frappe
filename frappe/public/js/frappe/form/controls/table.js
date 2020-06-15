@@ -79,7 +79,10 @@ frappe.ui.form.ControlTable = frappe.ui.form.Control.extend({
 					var cur_row = cur_grid_rows[row_idx - 1];
 					row_idx ++;
 					var row_name = cur_row.doc.name;
+					var child_doctype = cur_frm.fields_dict[cur_table_field].df.options;
 					$.each(row, function(ci, value) {
+						var fieldtype = frappe.meta.get_field(child_doctype,fieldnames[ci]).fieldtype;
+						value = value && fieldtype && fieldtype ==='Text Editor'?  value.replace(/[\n\r]/g,'<br>') : value;
 						if (fieldnames[ci]) frappe.model.set_value(cur_doctype, row_name, fieldnames[ci], value);
 					});
 					frappe.show_progress(__('Processing'), i, data.length);

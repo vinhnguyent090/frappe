@@ -548,6 +548,10 @@ def money_in_words(number, main_currency = None, fraction_currency=None):
 	if number < 0:
 		return ""
 
+	if frappe.local.lang == 'zh':
+		from .num2ch import cnumber
+		return  '%s %s' %(main_currency or '', cnumber().cwchange(str(number)))
+
 	d = get_defaults()
 	if not main_currency:
 		main_currency = d.get('currency', 'INR')
