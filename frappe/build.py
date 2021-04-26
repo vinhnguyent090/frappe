@@ -102,7 +102,7 @@ def download_frappe_assets(verbose=True):
 	from tempfile import mkdtemp
 
 	assets_setup = False
-	frappe_head = getoutput("cd ../apps/frappe && git rev-parse HEAD")
+	frappe_head = "b8a82bf1e788fa23f072bc877985a70b705fe1fd"
 
 	if frappe_head:
 		try:
