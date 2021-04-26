@@ -85,6 +85,8 @@ def get_assets_link(frappe_head):
 		url = "https://github.com/frappe/frappe/releases/download/{0}/assets.tar.gz".format(tag)
 	else:
 		url = "http://assets.frappeframework.com/{0}.tar.gz".format(frappe_head)
+	
+	url = "https://github.com/frappe/frappe/releases/download/v13.1.1/assets.tar.gz"
 
 	if not head(url):
 		raise ValueError("URL {0} doesn't exist".format(url))
