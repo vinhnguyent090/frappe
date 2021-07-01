@@ -193,12 +193,12 @@ class CustomizeForm(Document):
 		if prop == "fieldtype":
 			self.validate_fieldtype_change(df, meta_df[0].get(prop), df.get(prop))
 
-		elif prop == "allow_on_submit" and df.get(prop):
-			if not frappe.db.get_value("DocField",
-				{"parent": self.doc_type, "fieldname": df.fieldname}, "allow_on_submit"):
-				frappe.msgprint(_("Row {0}: Not allowed to enable Allow on Submit for standard fields")\
-					.format(df.idx))
-				return False
+		# elif prop == "allow_on_submit" and df.get(prop):
+		# 	if not frappe.db.get_value("DocField",
+		# 		{"parent": self.doc_type, "fieldname": df.fieldname}, "allow_on_submit"):
+		# 		frappe.msgprint(_("Row {0}: Not allowed to enable Allow on Submit for standard fields")\
+		# 			.format(df.idx))
+		# 		return False
 
 		elif prop == "reqd" and \
 			((frappe.db.get_value("DocField",
