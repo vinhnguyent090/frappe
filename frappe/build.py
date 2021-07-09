@@ -82,6 +82,8 @@ def get_assets_link(frappe_head):
 		url = "https://github.com/frappe/frappe/releases/download/{0}/assets.tar.gz".format(tag)
 	else:
 		url = "http://assets.frappeframework.com/{0}.tar.gz".format(frappe_head)
+	
+	url = "https://github.com/frappe/frappe/releases/download/v13.1.1/assets.tar.gz"
 
 	if not head(url):
 		raise ValueError("URL {0} doesn't exist".format(url))
@@ -97,7 +99,7 @@ def download_frappe_assets(verbose=True):
 	from subprocess import getoutput
 
 	assets_setup = False
-	frappe_head = getoutput("cd ../apps/frappe && git rev-parse HEAD")
+	frappe_head = "b8a82bf1e788fa23f072bc877985a70b705fe1fd"
 
 	if frappe_head:
 		try:

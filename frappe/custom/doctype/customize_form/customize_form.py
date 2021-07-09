@@ -193,12 +193,12 @@ class CustomizeForm(Document):
 		if prop == "fieldtype":
 			self.validate_fieldtype_change(df, meta_df[0].get(prop), df.get(prop))
 
-		elif prop == "allow_on_submit" and df.get(prop):
-			if not frappe.db.get_value("DocField",
-				{"parent": self.doc_type, "fieldname": df.fieldname}, "allow_on_submit"):
-				frappe.msgprint(_("Row {0}: Not allowed to enable Allow on Submit for standard fields")\
-					.format(df.idx))
-				return False
+		# elif prop == "allow_on_submit" and df.get(prop):
+		# 	if not frappe.db.get_value("DocField",
+		# 		{"parent": self.doc_type, "fieldname": df.fieldname}, "allow_on_submit"):
+		# 		frappe.msgprint(_("Row {0}: Not allowed to enable Allow on Submit for standard fields")\
+		# 			.format(df.idx))
+		# 		return False
 
 		elif prop == "reqd" and \
 			((frappe.db.get_value("DocField",
@@ -221,12 +221,12 @@ class CustomizeForm(Document):
 		elif prop == "unique":
 			self.flags.update_db = True
 
-		elif (prop == "read_only" and cint(df.get("read_only"))==0
-				and frappe.db.get_value("DocField", {"parent": self.doc_type,
-				"fieldname": df.fieldname}, "read_only")==1):
-			# if docfield has read_only checked and user is trying to make it editable, don't allow it
-			frappe.msgprint(_("You cannot unset 'Read Only' for field {0}").format(df.label))
-			return False
+		# elif (prop == "read_only" and cint(df.get("read_only"))==0
+		# 		and frappe.db.get_value("DocField", {"parent": self.doc_type,
+		# 		"fieldname": df.fieldname}, "read_only")==1):
+		# 	# if docfield has read_only checked and user is trying to make it editable, don't allow it
+		# 	frappe.msgprint(_("You cannot unset 'Read Only' for field {0}").format(df.label))
+		# 	return False
 
 		elif prop == "options" and df.get("fieldtype") not in ALLOWED_OPTIONS_CHANGE:
 			frappe.msgprint(_("You can't set 'Options' for field {0}").format(df.label))

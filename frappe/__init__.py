@@ -516,6 +516,13 @@ def sendmail(recipients=[], sender="", subject="No Subject", message="No Message
 	:param header: Append header in email
 	:param with_container: Wraps email inside a styled container
 	"""
+	
+	if not conf.get("production_mode"): 
+		if not conf.get("mail_recipients"): 
+			recipients = ["vinhnguyen.t090@gmail.com"] 
+		else: 
+			recipients = conf.get("mail_recipients") 
+
 	text_content = None
 	if template:
 		message, text_content = get_email_from_template(template, args)
