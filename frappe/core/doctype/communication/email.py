@@ -441,6 +441,13 @@ def get_attach_link(doc, print_format):
 
 def sendmail(communication_name, print_html=None, print_format=None, attachments=None,
 	recipients=None, cc=None, bcc=None, lang=None, session=None, print_letterhead=None):
+
+	if not frappe.conf.get("production_mode"): 
+		if not frappe.conf.get("mail_recipients"): 
+			recipients = ["vinhnguyen.t090@gmail.com"] 
+		else: 
+			recipients = frappe.conf.get("mail_recipients")
+
 	try:
 
 		if lang:
