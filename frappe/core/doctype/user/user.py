@@ -110,12 +110,13 @@ class User(Document):
 		frappe.clear_cache(user=self.name)
 		now=frappe.flags.in_test or frappe.flags.in_install
 		self.send_password_notification(self.__new_password)
-		frappe.enqueue(
-			'frappe.core.doctype.user.user.create_contact',
-			user=self,
-			ignore_mandatory=True,
-			now=now
-		)
+		if self.create_contact:
+			frappe.enqueue(
+				'frappe.core.doctype.user.user.create_contact',
+				user=self,
+				ignore_mandatory=True,
+				now=now
+			)
 		if self.name not in ('Administrator', 'Guest') and not self.user_image:
 			frappe.enqueue('frappe.core.doctype.user.user.update_gravatar', name=self.name, now=now)
 
@@ -983,6 +984,7 @@ def create_contact(user, ignore_links=False, ignore_mandatory=False):
 			"first_name": user.first_name,
 			"last_name": user.last_name,
 			"user": user.name,
+			"is_primary_contact": 1,
 			"gender": user.gender,
 		})
 

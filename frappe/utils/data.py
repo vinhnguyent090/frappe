@@ -990,6 +990,12 @@ def money_in_words(number: str, main_currency: Optional[str] = None, fraction_cu
 		out = main_currency + ' ' + _(in_words(main, in_million).title())
 		if cint(fraction):
 			out = out + ' ' + _('and') + ' ' + _(in_words(fraction, in_million).title()) + ' ' + fraction_currency
+	
+	#Vincent format VND
+	if main_currency == "VND":
+		out = out[4:].capitalize() + ' đồng'
+		if out == "Số 0 đồng":
+			out = "Không đồng"
 
 	return out + ' ' + _('only.')
 
