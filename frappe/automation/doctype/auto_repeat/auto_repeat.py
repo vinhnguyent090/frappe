@@ -165,6 +165,8 @@ class AutoRepeat(Document):
 		new_doc = frappe.copy_doc(reference_doc, ignore_no_copy = False)
 		self.update_doc(new_doc, reference_doc)
 		new_doc.insert(ignore_permissions = True)
+		# Vincent add flags.auto_repeat
+		new_doc.flags.auto_repeat = True
 
 		if self.submit_on_creation:
 			new_doc.submit()
