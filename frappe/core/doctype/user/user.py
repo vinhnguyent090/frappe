@@ -110,7 +110,7 @@ class User(Document):
 		frappe.clear_cache(user=self.name)
 		now=frappe.flags.in_test or frappe.flags.in_install
 		self.send_password_notification(self.__new_password)
-		if self.create_contact:
+		if self.get("create_contact"):
 			frappe.enqueue(
 				'frappe.core.doctype.user.user.create_contact',
 				user=self,
