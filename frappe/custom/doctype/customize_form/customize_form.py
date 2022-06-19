@@ -54,7 +54,7 @@ class CustomizeForm(Document):
 	def validate_doctype(self, meta):
 		"""
 		Check if the doctype is allowed to be customized.
-		'''
+		"""
 		# if self.doc_type in core_doctypes_list:
 		# 	frappe.throw(_("Core DocTypes cannot be customized."))
 
