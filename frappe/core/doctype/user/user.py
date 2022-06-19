@@ -122,11 +122,15 @@ class User(Document):
 		frappe.clear_cache(user=self.name)
 		now = frappe.flags.in_test or frappe.flags.in_install
 		self.send_password_notification(self.__new_password)
-		frappe.enqueue(
-			"frappe.core.doctype.user.user.create_contact", user=self, ignore_mandatory=True, now=now
-		)
-		if self.name not in ("Administrator", "Guest") and not self.user_image:
-			frappe.enqueue("frappe.core.doctype.user.user.update_gravatar", name=self.name, now=now)
+		if self.get("create_contact"):
+			frappe.enqueue(
+				'frappe.core.doctype.user.user.create_contact',
+				user=self,
+				ignore_mandatory=True,
+				now=now
+			)
+		if self.name not in ('Administrator', 'Guest') and not self.user_image:
+			frappe.enqueue('frappe.core.doctype.user.user.update_gravatar', name=self.name, now=now)
 
 		# Set user selected timezone
 		if self.time_zone:
@@ -1108,15 +1112,13 @@ def create_contact(user, ignore_links=False, ignore_mandatory=False):
 
 	contact_name = get_contact_name(user.email)
 	if not contact_name:
-		contact = frappe.get_doc(
-			{
-				"doctype": "Contact",
-				"first_name": user.first_name,
-				"last_name": user.last_name,
-				"user": user.name,
-				"gender": user.gender,
-			}
-		)
+		contact = frappe.get_doc({
+			"doctype": "Contact",
+			"first_name": user.first_name,
+			"last_name": user.last_name,
+			"user": user.name,
+			"gender": user.gender,
+		})
 
 		if user.email:
 			contact.add_email(user.email, is_primary=True)

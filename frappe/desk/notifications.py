@@ -275,6 +275,8 @@ def get_open_count(doctype, name, items=None):
 		filters = get_filters_for(d)
 		fieldname = links.get("non_standard_fieldnames", {}).get(d, links.get("fieldname"))
 		data = {"name": d}
+		if d=="ToDo":
+			filters = {"status": "Open"}
 		if filters:
 			# get the fieldname for the current document
 			# we only need open documents related to the current document

@@ -54,9 +54,9 @@ class CustomizeForm(Document):
 	def validate_doctype(self, meta):
 		"""
 		Check if the doctype is allowed to be customized.
-		"""
-		if self.doc_type in core_doctypes_list:
-			frappe.throw(_("Core DocTypes cannot be customized."))
+		'''
+		# if self.doc_type in core_doctypes_list:
+		# 	frappe.throw(_("Core DocTypes cannot be customized."))
 
 		if meta.issingle:
 			frappe.throw(_("Single DocTypes cannot be customized."))
@@ -211,35 +211,35 @@ class CustomizeForm(Document):
 		if prop == "fieldtype":
 			self.validate_fieldtype_change(df, meta_df[0].get(prop), df.get(prop))
 
+		# elif prop == "allow_on_submit" and df.get(prop):
+		# 	if not frappe.db.get_value("DocField",
+		# 		{"parent": self.doc_type, "fieldname": df.fieldname}, "allow_on_submit"):
+		# 		frappe.msgprint(_("Row {0}: Not allowed to enable Allow on Submit for standard fields")\
+		# 			.format(df.idx))
+		# 		return False
 		elif prop == "length":
 			old_value_length = cint(meta_df[0].get(prop))
 			new_value_length = cint(df.get(prop))
-
 			if new_value_length and (old_value_length > new_value_length):
-				self.check_length_for_fieldtypes.append({"df": df, "old_value": meta_df[0].get(prop)})
+				self.check_length_for_fieldtypes.append({'df': df, 'old_value': meta_df[0].get(prop)})
 				self.validate_fieldtype_length()
 			else:
+				self.validate_fieldtype_length()
 				self.flags.update_db = True
 
 		elif prop == "allow_on_submit" and df.get(prop):
-			if not frappe.db.get_value(
-				"DocField", {"parent": self.doc_type, "fieldname": df.fieldname}, "allow_on_submit"
-			):
-				frappe.msgprint(
-					_("Row {0}: Not allowed to enable Allow on Submit for standard fields").format(df.idx)
-				)
+			if not frappe.db.get_value("DocField",
+				{"parent": self.doc_type, "fieldname": df.fieldname}, "allow_on_submit"):
+				frappe.msgprint(_("Row {0}: Not allowed to enable Allow on Submit for standard fields")\
+					.format(df.idx))
 				return False
 
-		elif prop == "reqd" and (
-			(
-				frappe.db.get_value("DocField", {"parent": self.doc_type, "fieldname": df.fieldname}, "reqd")
-				== 1
-			)
-			and (df.get(prop) == 0)
-		):
-			frappe.msgprint(
-				_("Row {0}: Not allowed to disable Mandatory for standard fields").format(df.idx)
-			)
+		elif prop == "reqd" and \
+			((frappe.db.get_value("DocField",
+				{"parent":self.doc_type,"fieldname":df.fieldname}, "reqd") == 1) \
+				and (df.get(prop) == 0)):
+			frappe.msgprint(_("Row {0}: Not allowed to disable Mandatory for standard fields")\
+					.format(df.idx))
 			return False
 
 		elif (
@@ -263,14 +263,9 @@ class CustomizeForm(Document):
 		elif prop == "unique":
 			self.flags.update_db = True
 
-		elif (
-			prop == "read_only"
-			and cint(df.get("read_only")) == 0
-			and frappe.db.get_value(
-				"DocField", {"parent": self.doc_type, "fieldname": df.fieldname}, "read_only"
-			)
-			== 1
-		):
+		elif (prop == "read_only" and cint(df.get("read_only"))==0
+				and frappe.db.get_value("DocField", {"parent": self.doc_type,
+				"fieldname": df.fieldname}, "read_only")==1):
 			# if docfield has read_only checked and user is trying to make it editable, don't allow it
 			frappe.msgprint(_("You cannot unset 'Read Only' for field {0}").format(df.label))
 			return False
