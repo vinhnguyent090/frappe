@@ -44,7 +44,8 @@ class AssignmentRule(Document):
 
 	def do_assignment(self, doc):
 		# clear existing assignment, to reassign
-		assign_to.clear(doc.get("doctype"), doc.get("name"))
+		# Vincent disable assign
+		# assign_to.clear(doc.get("doctype"), doc.get("name"))
 
 		user = self.get_user(doc)
 
@@ -246,7 +247,9 @@ def apply(doc, method=None, doctype=None, name=None):
 				break
 
 	# apply rule only if there are no existing assignments
-	if clear:
+	# Vincent enable 
+	# if clear:	
+	if True:
 		for assignment_rule in assignment_rule_docs:
 			if assignment_rule.is_rule_not_applicable_today():
 				continue
