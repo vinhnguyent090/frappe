@@ -659,15 +659,22 @@ def sendmail(
 	if bcc is None:
 		bcc = []
 	
-	# for recipient in recipients:
-	# 	if recipient.find("@byphone.com") > -1:
-	# 		recipients = ["vinhnguyen.t090@gmail.com"]
+	for recipient in recipients:
+		if recipient.find("@byphone.com") > -1:
+			recipients.remove(recipient)
+			return
+
+	print(777777)
+	print(len(recipients))
+	print(88888)
+	if len(recipients) == 0:
+		return
 	
 	if not conf.get("production_mode"): 
 		if not conf.get("mail_recipients"): 
 			recipients = ["vinhnguyen.t090@gmail.com"] 
 		else: 
-			recipients = conf.get("mail_recipients") 
+			recipients = conf.get("mail_recipients")
 
 	text_content = None
 	if template:
