@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "address_details",
+  "column_break_amsi",
   "address_title",
   "address_type",
   "address_line1",
@@ -31,6 +32,7 @@
   {
    "fieldname": "address_details",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "options": "fa fa-map-marker"
   },
   {
@@ -44,8 +46,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Address Type",
-   "options": "Billing\nShipping\nOffice\nPersonal\nPlant\nPostal\nShop\nSubsidiary\nWarehouse\nCurrent\nPermanent\nOther",
-   "reqd": 1
+   "options": "Billing\nShipping\nOffice\nPersonal\nPlant\nPostal\nShop\nSubsidiary\nWarehouse\nCurrent\nPermanent\nOther"
   },
   {
    "fieldname": "address_line1",
@@ -58,7 +59,8 @@
    "fieldname": "address_line2",
    "fieldtype": "Data",
    "label": "Address Line 2",
-   "length": 240
+   "length": 240,
+   "reqd": 1
   },
   {
    "fieldname": "city",
@@ -72,26 +74,29 @@
   {
    "fieldname": "county",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "County"
   },
   {
    "fieldname": "state",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "State/Province"
   },
   {
    "fieldname": "country",
    "fieldtype": "Link",
+   "hidden": 1,
    "in_global_search": 1,
    "in_standard_filter": 1,
    "label": "Country",
    "options": "Country",
-   "reqd": 1,
    "search_index": 1
   },
   {
    "fieldname": "pincode",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Postal Code",
    "search_index": 1
   },
@@ -145,12 +150,16 @@
    "fieldtype": "Table",
    "label": "Links",
    "options": "Dynamic Link"
+  },
+  {
+   "fieldname": "column_break_amsi",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-map-marker",
  "idx": 5,
  "links": [],
- "modified": "2023-11-20 17:28:41.698356",
+ "modified": "2024-06-03 09:21:11.398489",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Address",

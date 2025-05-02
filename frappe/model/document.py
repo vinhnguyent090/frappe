@@ -226,6 +226,9 @@ class Document(BaseDocument):
 		:param permtype: `read`, `write`, `submit`, `cancel`, `delete`, etc.
 		"""
 
+		if not self.name:
+			return True
+
 		if self.flags.ignore_permissions:
 			return True
 
