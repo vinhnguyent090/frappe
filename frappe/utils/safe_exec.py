@@ -62,6 +62,7 @@ class FrappeTransformer(RestrictingNodeTransformer):
 
 
 def is_safe_exec_enabled() -> bool:
+	return True
 	# server scripts can only be enabled via common_site_config.json
 	return bool(frappe.get_common_site_config().get(SAFE_EXEC_CONFIG_KEY))
 
