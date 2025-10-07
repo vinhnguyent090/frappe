@@ -685,6 +685,9 @@ def validate_auth_via_api_keys(authorization_header):
 		elif auth_type.lower() == "token":
 			api_key, api_secret = auth_token.split(":")
 			validate_api_key_secret(api_key, api_secret, authorization_source)
+		elif auth_type.lower() == "apikey":
+			api_key, api_secret = auth_token.split(":")
+			validate_api_key_secret(api_key, api_secret, authorization_source)
 	except binascii.Error:
 		frappe.throw(
 			_("Failed to decode token, please provide a valid base64-encoded token."),
